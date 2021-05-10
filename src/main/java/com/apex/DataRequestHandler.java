@@ -12,9 +12,9 @@ import static com.apex.db.DbService.*;
 
 public class DataRequestHandler implements HttpFunction {
 
-    private static final EcoDataResponse dataResponse = getDataResponse();
+    private static EcoDataResponse dataResponse;
 
-    private static EcoDataResponse getDataResponse() {
+    private EcoDataResponse getDataResponse() {
         try {
             return EcoDataResponse.builder()
                     .craftingTables(getAllCraftingTables())
@@ -33,10 +33,15 @@ public class DataRequestHandler implements HttpFunction {
     }
 
     @Override
+    @SuppressWarnings("squid:S2696")
     public void service(HttpRequest request, HttpResponse response) throws Exception {
         System.out.println("Received request " + request);
 
         int statusCode = 200;
+
+        if (dataResponse == null) {
+            dataResponse = getDataResponse();
+        }
 
         /*
         EcoDataResponse dataResponse = null;
