@@ -12,6 +12,8 @@ class RequestTest {
 
         withEnvironmentVariable("jdbc_url", "jdbc:sqlite:src/main/resources/eco-data.db")
                 .and("db_pwd", "TJcdV4UA%1uz").execute(() -> {
+
+            //TODO: how to get non null HttpResponse object
             assertThat(System.getenv("jdbc_url")).isNotBlank();
         });
     }

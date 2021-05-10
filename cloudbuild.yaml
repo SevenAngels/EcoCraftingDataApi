@@ -1,0 +1,7 @@
+steps:
+  - name: 'gcr.io/cloud-builders/mvn'
+    args: [ 'clean', 'verify' ]
+    dir: '/'
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: [ 'functions', 'deploy', 'eco-crafting-data', 'master-push', '--runtime', 'java11', '--entry-point', 'com.apex.DataRequestHandler' ]
+    dir: '/'
