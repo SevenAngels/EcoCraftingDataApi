@@ -2,17 +2,16 @@ package com.apex.db;
 
 import com.apex.model.*;
 import lombok.SneakyThrows;
-import org.sqlite.SQLiteConfig;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 @SuppressWarnings("squid:S1192")
 public class DbService {
 
     private static final String JDBC_URL = System.getenv("jdbc_url");
+    private static final String DB_PWD = System.getenv("db_pwd");
 
     private static final String SELECT_SKILLS_SQL = "SELECT SkillName, SkillNameID, BasicUpgrade, AdvancedUpgrade, " +
             "ModernUpgrade, LavishWorkspace FROM Skills";
@@ -34,6 +33,7 @@ public class DbService {
             "FROM Outputs JOIN Items I on I.ItemNameID = Outputs.ItemNameID WHERE RecipeNameID = ?";
 
     private static final Connection connection = getConnection();
+
 
 
     private DbService() {
@@ -254,12 +254,7 @@ public class DbService {
 
     @SneakyThrows
     private static Connection getConnection() {
-        SQLiteConfig sqLiteConfig = new SQLiteConfig();
-        sqLiteConfig.setReadOnly(true);
-        Properties props = sqLiteConfig.toProperties();
-        props.put("driver", "org.sqlite.JDBC");
-        Class.forName("org.sqlite.JDBC");
-        return DriverManager.getConnection(JDBC_URL, props);
+        return DriverManager.getConnection(JDBC_URL, null, DB_PWD);
     }
 
 }
