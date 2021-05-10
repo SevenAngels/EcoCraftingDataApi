@@ -1,6 +1,6 @@
 steps:
   - name: 'gcr.io/cloud-builders/mvn'
-    args: [ 'clean', 'verify' ]
+    args: [ 'clean', 'verify', '-DskipTests' ]
     dir: ''
   - name: 'gcr.io/cloud-builders/gcloud'
     args: [ 'functions', 'deploy', 'eco-crafting-data',
