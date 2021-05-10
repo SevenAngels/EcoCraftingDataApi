@@ -1,8 +1,6 @@
 package com.apex.response;
 
-import com.apex.DataRequestHandler;
 import com.google.gson.Gson;
-import org.apache.log4j.Logger;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -48,8 +46,6 @@ public class ApiGatewayResponse {
     }
 
     public static class Builder {
-
-        private static final Logger LOGGER = Logger.getLogger(DataRequestHandler.class);
 
         private static final Gson gson = new Gson();
 
@@ -120,8 +116,6 @@ public class ApiGatewayResponse {
             } else if (binaryBody != null) {
                 body = new String(Base64.getEncoder().encode(binaryBody), StandardCharsets.UTF_8);
             }
-
-            LOGGER.info("Building ApiGatewayResponse with body " + body);
             return new ApiGatewayResponse(statusCode, body, headers, base64Encoded);
         }
     }

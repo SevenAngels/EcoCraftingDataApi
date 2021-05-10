@@ -1,18 +1,14 @@
 package com.apex.db;
 
 import com.apex.model.*;
-import org.apache.log4j.Logger;
 import org.sqlite.SQLiteConfig;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 @SuppressWarnings("squid:S1192")
 public class DbService {
-
-    private static final Logger LOGGER = Logger.getLogger(DbService.class);
 
     private static final String JDBC_URL = System.getenv("jdbc_url");
     private static final String DB_USER = System.getenv("db_user");
@@ -43,7 +39,7 @@ public class DbService {
 
     public static List<CraftingTable> getAllCraftingTables() throws SQLException {
 
-        LOGGER.info("Getting all crafting tables");
+        System.out.println("Getting all crafting tables");
         List<CraftingTable> tables = new ArrayList<>();
 
         Connection connection = getConnection();
@@ -66,7 +62,7 @@ public class DbService {
     }
 
     public static List<UpgradeModule> getAllUpgradeModules() throws SQLException {
-        LOGGER.info("Getting all upgrade modules");
+        System.out.println("Getting all upgrade modules");
         List<UpgradeModule> upgrades = new ArrayList<>();
 
         Connection connection = getConnection();
@@ -89,7 +85,7 @@ public class DbService {
     }
 
     public static List<Recipe> getAllRecipes() throws SQLException {
-        LOGGER.info("Getting all recipes");
+        System.out.println("Getting all recipes");
         List<Recipe> recipes = new ArrayList<>();
 
         Connection connection = getConnection();
@@ -128,7 +124,7 @@ public class DbService {
     }
 
     public static List<Ingredient> getIngredientsForRecipe(String recipeNameID) throws SQLException {
-        LOGGER.info("Getting ingredients for recipe " + recipeNameID);
+        System.out.println("Getting ingredients for recipe " + recipeNameID);
         List<Ingredient> ingredients = new ArrayList<>();
 
         Connection connection = getConnection();
@@ -154,7 +150,7 @@ public class DbService {
     }
 
     public static List<Output> getOutputsForRecipe(String recipeNameID) throws SQLException {
-        LOGGER.info("Getting all outputs");
+        System.out.println("Getting all outputs");
         List<Output> outputs = new ArrayList<>();
 
         Connection connection = getConnection();
@@ -180,7 +176,7 @@ public class DbService {
     }
 
     public static List<Ingredient> getAllIngredients() throws SQLException {
-        LOGGER.info("Getting all ingredients");
+        System.out.println("Getting all ingredients");
         List<Ingredient> ingredients = new ArrayList<>();
 
         Connection connection = getConnection();
@@ -205,7 +201,7 @@ public class DbService {
     }
 
     public static List<Output> getAllOutputs() throws SQLException {
-        LOGGER.info("Getting all outputs");
+        System.out.println("Getting all outputs");
         List<Output> outputs = new ArrayList<>();
 
         Connection connection = getConnection();
@@ -230,7 +226,7 @@ public class DbService {
     }
 
     public static List<Item> getAllItems() throws SQLException {
-        LOGGER.info("Getting all items");
+        System.out.println("Getting all items");
         List<Item> items = new ArrayList<>();
 
         Connection connection = getConnection();
@@ -252,7 +248,7 @@ public class DbService {
     }
 
     public static List<Skill> getAllSkills() throws SQLException {
-        LOGGER.info("Getting all skills");
+        System.out.println("Getting all skills");
         List<Skill> skills = new ArrayList<>();
 
         Connection connection = getConnection();
@@ -277,7 +273,9 @@ public class DbService {
     }
 
     private static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(JDBC_URL, DB_USER, DB_PWD);
+        SQLiteConfig sqLiteConfig = new SQLiteConfig();
+        sqLiteConfig.setReadOnly(true);
+        return DriverManager.getConnection(JDBC_URL, sqLiteConfig.toProperties());
     }
 
 }
