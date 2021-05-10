@@ -3,5 +3,9 @@ steps:
     args: [ 'clean', 'verify' ]
     dir: ''
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: [ 'functions', 'deploy', 'eco-crafting-data', '--trigger-http', '--allow-unauthenticated', '--region', 'us-east1', '--runtime', 'java11', '--entry-point', 'com.apex.DataRequestHandler' ]
+    args: [ 'functions', 'deploy', 'eco-crafting-data',
+            '--trigger-http', '--allow-unauthenticated',
+            '--region', 'us-east1',
+            '--runtime', 'java11',
+            '--entry-point', 'com.apex.DataRequestHandler' ]
     dir: ''

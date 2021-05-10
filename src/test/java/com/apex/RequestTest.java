@@ -1,7 +1,10 @@
 package com.apex;
 
+import com.apex.response.EcoDataResponse;
+import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 
+import static com.apex.db.DbService.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class RequestTest {
@@ -9,8 +12,29 @@ class RequestTest {
     @Test
     void testGetEcoData() throws Exception {
 
-        //TODO make this an actual test
-        assertThat("").isBlank();
+        EcoDataResponse response = EcoDataResponse.builder()
+                .craftingTables(getAllCraftingTables())
+                .upgradeModules(getAllUpgradeModules())
+                .skills(getAllSkills())
+                .items(getAllItems())
+                .ingredients(getAllIngredients())
+                .outputs(getAllOutputs())
+                .recipes(getAllRecipes())
+                .build();
+
+        assertThat(response).isNotNull();
+        assertThat(response.getCraftingTables()).isNotEmpty();
+        assertThat(response.getIngredients()).isNotEmpty();
+        assertThat(response.getItems()).isNotEmpty();
+        assertThat(response.getOutputs()).isNotEmpty();
+        assertThat(response.getRecipes()).isNotEmpty();
+        assertThat(response.getSkills()).isNotEmpty();
+        assertThat(response.getUpgradeModules()).isNotEmpty();
+
+        String json = new Gson().toJson(response);
+
+        assertThat(json).startsWith("{");
+
         /*
         withEnvironmentVariable("jdbc_url", "jdbc:sqlite:src/main/resources/eco-data.db")
                 .and("db_pwd", "TJcdV4UA%1uz").execute(() -> {

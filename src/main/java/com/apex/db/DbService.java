@@ -2,6 +2,7 @@ package com.apex.db;
 
 import com.apex.model.*;
 import lombok.SneakyThrows;
+import org.sqlite.SQLiteConfig;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -254,7 +255,9 @@ public class DbService {
 
     @SneakyThrows
     private static Connection getConnection() {
-        return DriverManager.getConnection(JDBC_URL, null, DB_PWD);
+        SQLiteConfig sqLiteConfig = new SQLiteConfig();
+        sqLiteConfig.setReadOnly(true);
+        return DriverManager.getConnection(JDBC_URL, sqLiteConfig.toProperties());
     }
 
 }
