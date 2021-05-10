@@ -124,7 +124,6 @@ public class DbService {
     }
 
     public static List<Ingredient> getIngredientsForRecipe(String recipeNameID) throws SQLException {
-        System.out.println("Getting ingredients for recipe " + recipeNameID);
         List<Ingredient> ingredients = new ArrayList<>();
 
         Connection connection = getConnection();
@@ -150,7 +149,6 @@ public class DbService {
     }
 
     public static List<Output> getOutputsForRecipe(String recipeNameID) throws SQLException {
-        System.out.println("Getting all outputs");
         List<Output> outputs = new ArrayList<>();
 
         Connection connection = getConnection();

@@ -12,8 +12,6 @@ import static com.apex.db.DbService.*;
 
 public class DataRequestHandler implements HttpFunction {
 
-    private static EcoDataResponse dataResponse;
-
     private EcoDataResponse getDataResponse() {
         try {
             return EcoDataResponse.builder()
@@ -39,31 +37,15 @@ public class DataRequestHandler implements HttpFunction {
 
         int statusCode = 200;
 
-        if (dataResponse == null) {
-            dataResponse = getDataResponse();
-        }
+        EcoDataResponse dataResponse = getDataResponse();
 
-        /*
-        EcoDataResponse dataResponse = null;
-        try {
-            System.out.println("Building eco data response");
-            dataResponse = EcoDataResponse.builder()
-                    .craftingTables(getAllCraftingTables())
-                    .upgradeModules(getAllUpgradeModules())
-                    .skills(getAllSkills())
-                    .items(getAllItems())
-                    .ingredients(getAllIngredients())
-                    .outputs(getAllOutputs())
-                    .recipes(getAllRecipes())
-                    .build();
-        } catch (SQLException e) {
-            System.out.println(e);
+        if (dataResponse == null) {
             statusCode = 500;
         }
-        */
+
 
         response.setStatusCode(statusCode);
         response.appendHeader("Content-Type", "application/json");
-        response.getWriter().write(new Gson().toJson(dataResponse));
+        response.getWriter().write(new Gson().toJson(getDataResponse()));
     }
 }
