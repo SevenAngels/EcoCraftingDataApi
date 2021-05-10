@@ -43,9 +43,8 @@ public class DataRequestHandler implements HttpFunction {
             statusCode = 500;
         }
 
-
         response.setStatusCode(statusCode);
         response.appendHeader("Content-Type", "application/json");
-        response.getWriter().write(new Gson().toJson(getDataResponse()));
+        response.getWriter().write(new Gson().toJson(dataResponse));
     }
 }

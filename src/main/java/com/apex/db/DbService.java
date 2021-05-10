@@ -6,6 +6,7 @@ import org.sqlite.SQLiteConfig;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 @SuppressWarnings("squid:S1192")
 public class DbService {
@@ -273,7 +274,9 @@ public class DbService {
     private static Connection getConnection() throws SQLException {
         SQLiteConfig sqLiteConfig = new SQLiteConfig();
         sqLiteConfig.setReadOnly(true);
-        return DriverManager.getConnection(JDBC_URL, sqLiteConfig.toProperties());
+        Properties props = sqLiteConfig.toProperties();
+        props.put("driver", "org.sqlite.JDBC");
+        return DriverManager.getConnection(JDBC_URL, props);
     }
 
 }
