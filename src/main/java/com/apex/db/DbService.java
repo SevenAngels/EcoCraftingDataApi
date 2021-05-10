@@ -1,6 +1,7 @@
 package com.apex.db;
 
 import com.apex.model.*;
+import lombok.SneakyThrows;
 import org.sqlite.SQLiteConfig;
 
 import java.sql.*;
@@ -12,8 +13,6 @@ import java.util.Properties;
 public class DbService {
 
     private static final String JDBC_URL = System.getenv("jdbc_url");
-    private static final String DB_USER = System.getenv("db_user");
-    private static final String DB_PWD = System.getenv("db_pwd");
 
     private static final String SELECT_SKILLS_SQL = "SELECT SkillName, SkillNameID, BasicUpgrade, AdvancedUpgrade, " +
             "ModernUpgrade, LavishWorkspace FROM Skills";
@@ -34,6 +33,8 @@ public class DbService {
     private static final String SELECT_OUTPUTS_BY_RECIPE_SQL = "SELECT Quantity, Reducible, I.Name, I.Tag, I.ItemNameID " +
             "FROM Outputs JOIN Items I on I.ItemNameID = Outputs.ItemNameID WHERE RecipeNameID = ?";
 
+    private static final Connection connection = getConnection();
+
 
     private DbService() {
     }
@@ -43,7 +44,6 @@ public class DbService {
         System.out.println("Getting all crafting tables");
         List<CraftingTable> tables = new ArrayList<>();
 
-        Connection connection = getConnection();
         try (Statement statement = connection.createStatement()) {
             ResultSet rs = statement.executeQuery(SELECT_TABLES_SQL);
 
@@ -57,8 +57,6 @@ public class DbService {
             }
         }
 
-        connection.close();
-
         return tables;
     }
 
@@ -66,7 +64,6 @@ public class DbService {
         System.out.println("Getting all upgrade modules");
         List<UpgradeModule> upgrades = new ArrayList<>();
 
-        Connection connection = getConnection();
         try (Statement statement = connection.createStatement()) {
             ResultSet rs = statement.executeQuery(SELECT_UPGRADES_SQL);
 
@@ -80,8 +77,6 @@ public class DbService {
             }
         }
 
-        connection.close();
-
         return upgrades;
     }
 
@@ -89,7 +84,6 @@ public class DbService {
         System.out.println("Getting all recipes");
         List<Recipe> recipes = new ArrayList<>();
 
-        Connection connection = getConnection();
         try (Statement statement = connection.createStatement()) {
             ResultSet rs = statement.executeQuery(SELECT_RECIPES_SQL);
 
@@ -120,14 +114,12 @@ public class DbService {
             }
         }
 
-        connection.close();
         return recipes;
     }
 
     public static List<Ingredient> getIngredientsForRecipe(String recipeNameID) throws SQLException {
         List<Ingredient> ingredients = new ArrayList<>();
 
-        Connection connection = getConnection();
         try (PreparedStatement statement = connection.prepareStatement(SELECT_INGREDIENTS_BY_RECIPE_SQL)) {
             statement.setString(1, recipeNameID);
             ResultSet rs = statement.executeQuery();
@@ -145,14 +137,12 @@ public class DbService {
             }
         }
 
-        connection.close();
         return ingredients;
     }
 
     public static List<Output> getOutputsForRecipe(String recipeNameID) throws SQLException {
         List<Output> outputs = new ArrayList<>();
 
-        Connection connection = getConnection();
         try (PreparedStatement statement = connection.prepareStatement(SELECT_OUTPUTS_BY_RECIPE_SQL)) {
             statement.setString(1, recipeNameID);
             ResultSet rs = statement.executeQuery();
@@ -170,7 +160,6 @@ public class DbService {
             }
         }
 
-        connection.close();
         return outputs;
     }
 
@@ -178,7 +167,6 @@ public class DbService {
         System.out.println("Getting all ingredients");
         List<Ingredient> ingredients = new ArrayList<>();
 
-        Connection connection = getConnection();
         try (Statement statement = connection.createStatement()) {
             ResultSet rs = statement.executeQuery(SELECT_INGREDIENTS_SQL);
 
@@ -195,7 +183,6 @@ public class DbService {
             }
         }
 
-        connection.close();
         return ingredients;
     }
 
@@ -203,7 +190,6 @@ public class DbService {
         System.out.println("Getting all outputs");
         List<Output> outputs = new ArrayList<>();
 
-        Connection connection = getConnection();
         try (Statement statement = connection.createStatement()) {
             ResultSet rs = statement.executeQuery(SELECT_OUTPUTS_SQL);
 
@@ -220,7 +206,6 @@ public class DbService {
             }
         }
 
-        connection.close();
         return outputs;
     }
 
@@ -228,7 +213,6 @@ public class DbService {
         System.out.println("Getting all items");
         List<Item> items = new ArrayList<>();
 
-        Connection connection = getConnection();
         try (Statement statement = connection.createStatement()) {
             ResultSet rs = statement.executeQuery(SELECT_ITEMS_SQL);
 
@@ -242,7 +226,6 @@ public class DbService {
             }
         }
 
-        connection.close();
         return items;
     }
 
@@ -250,7 +233,6 @@ public class DbService {
         System.out.println("Getting all skills");
         List<Skill> skills = new ArrayList<>();
 
-        Connection connection = getConnection();
         try (Statement statement = connection.createStatement()) {
             ResultSet rs = statement.executeQuery(SELECT_SKILLS_SQL);
 
@@ -267,15 +249,16 @@ public class DbService {
             }
         }
 
-        connection.close();
         return skills;
     }
 
-    private static Connection getConnection() throws SQLException {
+    @SneakyThrows
+    private static Connection getConnection() {
         SQLiteConfig sqLiteConfig = new SQLiteConfig();
         sqLiteConfig.setReadOnly(true);
         Properties props = sqLiteConfig.toProperties();
         props.put("driver", "org.sqlite.JDBC");
+        Class.forName("org.sqlite.JDBC");
         return DriverManager.getConnection(JDBC_URL, props);
     }
 
