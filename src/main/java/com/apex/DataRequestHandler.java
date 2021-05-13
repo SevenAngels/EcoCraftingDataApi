@@ -38,6 +38,7 @@ public class DataRequestHandler implements HttpFunction {
         response.appendHeader("Access-Control-Allow-Origin", "*");
 
         if ("OPTIONS".equals(request.getMethod())) {
+            System.out.println("Preflight request, setting access control headers");
             response.appendHeader("Access-Control-Allow-Methods", "GET");
             response.appendHeader("Access-Control-Allow-Headers", "Content-Type");
             response.appendHeader("Access-Control-Max-Age", "3600");
@@ -54,6 +55,8 @@ public class DataRequestHandler implements HttpFunction {
 
         response.setStatusCode(statusCode);
         response.setContentType("application/json");
+
+        response.getHeaders().forEach((key, value) -> System.out.println(key + " : " + value));
         response.getWriter().write(new Gson().toJson(dataResponse));
     }
 }
