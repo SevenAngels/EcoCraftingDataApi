@@ -37,8 +37,6 @@ public class DataRequestHandler implements HttpFunction {
     @Override
     @SuppressWarnings("squid:S2696")
     public void service(HttpRequest request, HttpResponse response) throws Exception {
-        LOGGER.info("Received request from " + request.getHeaders().get("origin").get(0));
-
         response.appendHeader("Access-Control-Allow-Origin", "*");
 
         if ("OPTIONS".equals(request.getMethod())) {
