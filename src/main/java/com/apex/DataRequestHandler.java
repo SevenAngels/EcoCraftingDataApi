@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import java.sql.SQLException;
 
 import static com.apex.db.DbService.*;
+import static java.net.HttpURLConnection.*;
 
 public class DataRequestHandler implements HttpFunction {
 
@@ -33,20 +34,26 @@ public class DataRequestHandler implements HttpFunction {
     @Override
     @SuppressWarnings("squid:S2696")
     public void service(HttpRequest request, HttpResponse response) throws Exception {
-        System.out.println("Received request " + request);
 
-        int statusCode = 200;
+        response.appendHeader("Access-Control-Allow-Origin", "*");
+
+        if ("OPTIONS".equals(request.getMethod())) {
+            response.appendHeader("Access-Control-Allow-Methods", "GET");
+            response.appendHeader("Access-Control-Allow-Headers", "Content-Type");
+            response.appendHeader("Access-Control-Max-Age", "3600");
+            response.setStatusCode(HTTP_NO_CONTENT);
+            return;
+        }
+
+        int statusCode = HTTP_OK;
 
         EcoDataResponse dataResponse = getDataResponse();
-
         if (dataResponse == null) {
-            statusCode = 500;
+            statusCode = HTTP_INTERNAL_ERROR;
         }
 
         response.setStatusCode(statusCode);
         response.setContentType("application/json");
-        response.appendHeader("Access-Control-Allow-Origin", "*");
-        response.appendHeader("Powered-By", "Google Cloud Functions");
         response.getWriter().write(new Gson().toJson(dataResponse));
     }
 }
