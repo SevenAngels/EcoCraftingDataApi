@@ -45,6 +45,7 @@ public class DataRequestHandler implements HttpFunction {
 
         response.setStatusCode(statusCode);
         response.appendHeader("Content-Type", "application/json");
+        response.appendHeader("Access-Control-Allow-Origin", "*");
         response.getWriter().write(new Gson().toJson(dataResponse));
     }
 }
