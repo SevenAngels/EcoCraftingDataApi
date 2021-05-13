@@ -1,6 +1,6 @@
 package com.apex;
 
-import com.apex.response.EcoDataResponse;
+import com.apex.model.EcoDataResponse;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 

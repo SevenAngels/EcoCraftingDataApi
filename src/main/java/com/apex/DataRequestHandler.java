@@ -1,17 +1,20 @@
 package com.apex;
 
-import com.apex.response.EcoDataResponse;
+import com.apex.model.EcoDataResponse;
 import com.google.cloud.functions.HttpFunction;
 import com.google.cloud.functions.HttpRequest;
 import com.google.cloud.functions.HttpResponse;
 import com.google.gson.Gson;
 
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
 import static com.apex.db.DbService.*;
 import static java.net.HttpURLConnection.*;
 
 public class DataRequestHandler implements HttpFunction {
+
+    private static final Logger LOGGER = Logger.getLogger(DataRequestHandler.class.getName());
 
     private EcoDataResponse getDataResponse() {
         try {
@@ -34,11 +37,11 @@ public class DataRequestHandler implements HttpFunction {
     @Override
     @SuppressWarnings("squid:S2696")
     public void service(HttpRequest request, HttpResponse response) throws Exception {
+        LOGGER.info("Received request from " + request.getHeaders().get("origin").get(0));
 
         response.appendHeader("Access-Control-Allow-Origin", "*");
 
         if ("OPTIONS".equals(request.getMethod())) {
-            System.out.println("Preflight request, setting access control headers");
             response.appendHeader("Access-Control-Allow-Methods", "GET");
             response.appendHeader("Access-Control-Allow-Headers", "Content-Type");
             response.appendHeader("Access-Control-Max-Age", "3600");
@@ -56,7 +59,6 @@ public class DataRequestHandler implements HttpFunction {
         response.setStatusCode(statusCode);
         response.setContentType("application/json");
 
-        response.getHeaders().forEach((key, value) -> System.out.println(key + " : " + value));
         response.getWriter().write(new Gson().toJson(dataResponse));
     }
 }

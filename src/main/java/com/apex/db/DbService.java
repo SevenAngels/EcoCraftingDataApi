@@ -7,12 +7,14 @@ import org.sqlite.SQLiteConfig;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 @SuppressWarnings("squid:S1192")
 public class DbService {
 
+    private static final Logger LOGGER = Logger.getLogger(DbService.class.getName());
+
     private static final String JDBC_URL = System.getenv("jdbc_url");
-    private static final String DB_PWD = System.getenv("db_pwd");
 
     private static final String SELECT_SKILLS_SQL = "SELECT SkillName, SkillNameID, BasicUpgrade, AdvancedUpgrade, " +
             "ModernUpgrade, LavishWorkspace FROM Skills";
@@ -42,7 +44,7 @@ public class DbService {
 
     public static List<CraftingTable> getAllCraftingTables() throws SQLException {
 
-        System.out.println("Getting all crafting tables");
+        LOGGER.info("Getting all crafting tables");
         List<CraftingTable> tables = new ArrayList<>();
 
         try (Statement statement = connection.createStatement()) {
@@ -62,7 +64,7 @@ public class DbService {
     }
 
     public static List<UpgradeModule> getAllUpgradeModules() throws SQLException {
-        System.out.println("Getting all upgrade modules");
+        LOGGER.info("Getting all upgrade modules");
         List<UpgradeModule> upgrades = new ArrayList<>();
 
         try (Statement statement = connection.createStatement()) {
@@ -82,7 +84,7 @@ public class DbService {
     }
 
     public static List<Recipe> getAllRecipes() throws SQLException {
-        System.out.println("Getting all recipes");
+        LOGGER.info("Getting all recipes");
         List<Recipe> recipes = new ArrayList<>();
 
         try (Statement statement = connection.createStatement()) {
@@ -165,7 +167,7 @@ public class DbService {
     }
 
     public static List<Ingredient> getAllIngredients() throws SQLException {
-        System.out.println("Getting all ingredients");
+        LOGGER.info("Getting all ingredients");
         List<Ingredient> ingredients = new ArrayList<>();
 
         try (Statement statement = connection.createStatement()) {
@@ -188,7 +190,7 @@ public class DbService {
     }
 
     public static List<Output> getAllOutputs() throws SQLException {
-        System.out.println("Getting all outputs");
+        LOGGER.info("Getting all outputs");
         List<Output> outputs = new ArrayList<>();
 
         try (Statement statement = connection.createStatement()) {
@@ -211,7 +213,7 @@ public class DbService {
     }
 
     public static List<Item> getAllItems() throws SQLException {
-        System.out.println("Getting all items");
+        LOGGER.info("Getting all items");
         List<Item> items = new ArrayList<>();
 
         try (Statement statement = connection.createStatement()) {
@@ -231,7 +233,7 @@ public class DbService {
     }
 
     public static List<Skill> getAllSkills() throws SQLException {
-        System.out.println("Getting all skills");
+        LOGGER.info("Getting all skills");
         List<Skill> skills = new ArrayList<>();
 
         try (Statement statement = connection.createStatement()) {

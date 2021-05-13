@@ -1,6 +1,5 @@
-package com.apex.response;
+package com.apex.model;
 
-import com.apex.model.*;
 import lombok.Builder;
 import lombok.Data;
 
