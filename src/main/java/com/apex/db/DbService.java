@@ -2,17 +2,18 @@ package com.apex.db;
 
 import com.apex.model.*;
 import lombok.SneakyThrows;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.sqlite.SQLiteConfig;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 @SuppressWarnings("squid:S1192")
 public class DbService {
 
-    private static final Logger LOGGER = Logger.getLogger(DbService.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(DbService.class);
 
     private static final String JDBC_URL = System.getenv("jdbc_url");
 
