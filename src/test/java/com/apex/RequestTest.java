@@ -20,6 +20,7 @@ class RequestTest {
                 .ingredients(getAllIngredients())
                 .outputs(getAllOutputs())
                 .recipes(getAllRecipes())
+                .laborCosts(getAllLaborCosts())
                 .build();
 
         assertThat(response).isNotNull();
@@ -30,6 +31,7 @@ class RequestTest {
         assertThat(response.getRecipes()).isNotEmpty();
         assertThat(response.getSkills()).isNotEmpty();
         assertThat(response.getUpgradeModules()).isNotEmpty();
+        assertThat(response.getLaborCosts()).isNotEmpty();
 
         String json = new Gson().toJson(response);
 

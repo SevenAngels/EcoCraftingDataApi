@@ -17,6 +17,7 @@ public class DbService {
 
     private static final String JDBC_URL = System.getenv("jdbc_url");
 
+    private static final String SELECT_LABOR_COSTS_SQL = "SELECT Level, Modifier FROM LaborCost";
     private static final String SELECT_SKILLS_SQL = "SELECT SkillName, SkillNameID, BasicUpgrade, AdvancedUpgrade, " +
             "ModernUpgrade, LavishWorkspace FROM Skills";
     private static final String SELECT_TABLES_SQL = "SELECT Name, NameID, UpgradeModule FROM CraftingTables";
@@ -254,6 +255,25 @@ public class DbService {
         }
 
         return skills;
+    }
+
+    public static List<LaborCost> getAllLaborCosts() throws SQLException {
+        LOGGER.info("Getting all labor costs");
+        List<LaborCost> laborCosts = new ArrayList<>();
+
+        try (Statement statement = connection.createStatement()) {
+            ResultSet rs = statement.executeQuery(SELECT_LABOR_COSTS_SQL);
+
+            while (rs.next()) {
+                LaborCost laborCost = LaborCost.builder()
+                        .level(rs.getInt("Level"))
+                        .modifier(rs.getBigDecimal("Modifier"))
+                        .build();
+                laborCosts.add(laborCost);
+            }
+        }
+
+        return laborCosts;
     }
 
     @SneakyThrows

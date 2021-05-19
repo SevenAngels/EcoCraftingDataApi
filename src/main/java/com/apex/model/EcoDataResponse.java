@@ -15,4 +15,5 @@ public class EcoDataResponse {
     private List<Skill> skills;
     private List<Ingredient> ingredients;
     private List<Output> outputs;
+    private List<LaborCost> laborCosts;
 }

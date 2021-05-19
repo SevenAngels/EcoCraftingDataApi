@@ -26,6 +26,7 @@ public class DataRequestHandler implements HttpFunction {
                     .ingredients(getAllIngredients())
                     .outputs(getAllOutputs())
                     .recipes(getAllRecipes())
+                    .laborCosts(getAllLaborCosts())
                     .build();
         } catch (SQLException e) {
             e.printStackTrace();
