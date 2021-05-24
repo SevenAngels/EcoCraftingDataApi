@@ -21,7 +21,7 @@ public class DbService {
     private static final String SELECT_SKILLS_SQL = "SELECT SkillName, SkillNameID, BasicUpgrade, AdvancedUpgrade, " +
             "ModernUpgrade, LavishWorkspace FROM Skills";
     private static final String SELECT_TABLES_SQL = "SELECT Name, NameID, UpgradeModule FROM CraftingTables";
-    private static final String SELECT_UPGRADES_SQL = "SELECT Name, TypeNameID, Modifier FROM UpgradeModules";
+    private static final String SELECT_UPGRADES_SQL = "SELECT Name, NameID, TypeNameID, Modifier FROM UpgradeModules";
     private static final String SELECT_ITEMS_SQL = "SELECT Name, ItemNameID, Tag FROM ITEMS";
     private static final String SELECT_INGREDIENTS_SQL = "SELECT Quantity, Reducible, I.Name, I.Tag, I.ItemNameID " +
             "FROM Ingredients JOIN Items I on I.ItemNameID = Ingredients.ItemNameID";
@@ -77,6 +77,7 @@ public class DbService {
             while (rs.next()) {
                 UpgradeModule upgrade = UpgradeModule.builder()
                         .name(rs.getString("Name"))
+                        .nameID(rs.getString("NameID"))
                         .typeNameID(rs.getString("TypeNameID"))
                         .modifier(rs.getBigDecimal("Modifier"))
                         .build();
