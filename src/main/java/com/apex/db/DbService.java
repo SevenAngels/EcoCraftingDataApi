@@ -62,6 +62,8 @@ public class DbService {
             }
         }
 
+        tables.sort(CraftingTable::compareTo);
+
         return tables;
     }
 
@@ -75,12 +77,14 @@ public class DbService {
             while (rs.next()) {
                 UpgradeModule upgrade = UpgradeModule.builder()
                         .name(rs.getString("Name"))
-                        .nameID(rs.getString("TypeNameID"))
+                        .typeNameID(rs.getString("TypeNameID"))
                         .modifier(rs.getBigDecimal("Modifier"))
                         .build();
                 upgrades.add(upgrade);
             }
         }
+
+        upgrades.sort(UpgradeModule::compareTo);
 
         return upgrades;
     }
@@ -119,6 +123,8 @@ public class DbService {
             }
         }
 
+        recipes.sort(Recipe::compareTo);
+
         return recipes;
     }
 
@@ -141,6 +147,8 @@ public class DbService {
                 ingredients.add(ingredient);
             }
         }
+
+        ingredients.sort(Ingredient::compareTo);
 
         return ingredients;
     }
@@ -165,6 +173,8 @@ public class DbService {
             }
         }
 
+        outputs.sort(Output::compareTo);
+
         return outputs;
     }
 
@@ -187,6 +197,8 @@ public class DbService {
                 ingredients.add(ingredient);
             }
         }
+
+        ingredients.sort(Ingredient::compareTo);
 
         return ingredients;
     }
@@ -211,6 +223,8 @@ public class DbService {
             }
         }
 
+        outputs.sort(Output::compareTo);
+
         return outputs;
     }
 
@@ -230,6 +244,8 @@ public class DbService {
                 items.add(item);
             }
         }
+
+        items.sort(Item::compareTo);
 
         return items;
     }
@@ -253,6 +269,8 @@ public class DbService {
                 skills.add(skill);
             }
         }
+
+        skills.sort(Skill::compareTo);
 
         return skills;
     }
