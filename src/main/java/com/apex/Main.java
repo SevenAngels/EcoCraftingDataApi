@@ -12,7 +12,10 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 import static com.apex.db.DbService.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -30,7 +33,11 @@ public class Main {
 
 
     public static void main(String[] args) throws SQLException, IOException, InterruptedException {
-        doTranslationsToFile();
+        List<Message> messages = readMessagesToTranslate();
+        translateMessages(messages);
+        String json = new Gson().toJson(messages);
+        FileUtils.writeStringToFile(new File("src/main/resources/messages.json"), json, UTF_8);
+        LOGGER.info(json);
     }
 
     private static void createEnglishFilesForTranslation() throws SQLException, IOException {
@@ -126,14 +133,14 @@ public class Main {
         stringBuilder.delete(0, stringBuilder.length());
         List<UpgradeModule> upgrades = ecoData.getUpgradeModules();
         upgrades.sort(UpgradeModule::compareTo);
-        upgrades.forEach(upgrade -> stringBuilder.append(upgrade.getTypeNameID()).append("\n"));
+        upgrades.forEach(upgrade -> stringBuilder.append(upgrade.getNameID()).append("\n"));
         FileUtils.writeStringToFile(new File(TRANSLATION_PATH + "/ref/" + "upgrades.txt"),
                 stringBuilder.toString(), UTF_8, false);
     }
 
     private static void translateAllSupportedLanguages() throws SQLException, IOException {
         for (String language : LANGUAGES) {
-            translateToLanguage(language);
+            translateCraftingDataToLanguage(language);
         }
     }
 
@@ -143,7 +150,7 @@ public class Main {
                 new Gson().toJson(localeData), UTF_8, false);
     }
 
-    private static void translateToLanguage(String languageCode) throws SQLException, IOException {
+    private static void translateCraftingDataToLanguage(String languageCode) throws SQLException, IOException {
         EcoDataResponse ecoData = EcoDataResponse.builder()
                 .craftingTables(getAllCraftingTables())
                 .upgradeModules(getAllUpgradeModules())
@@ -265,7 +272,37 @@ public class Main {
         return localeDataList;
     }
 
-    private static int getRandomInteger(int bound) {
-        return new Random().nextInt(bound);
+    private static List<Message> readMessagesToTranslate() throws IOException {
+        File file = new File(TRANSLATION_PATH + "messages\\messages.json");
+        String json = FileUtils.readFileToString(file, UTF_8);
+        return Arrays.asList(new Gson().fromJson(json, Message[].class));
+    }
+
+    private static void translateMessages(Collection<Message> messages) throws IOException {
+        String sourceText = "";
+        for (Message message : messages) {
+            for (LocalizedMessage localizedMessage : message.getLocalizedMessages()) {
+                if (localizedMessage.getLang().equals("en")) {
+                    sourceText = localizedMessage.getText();
+                } else {
+                    try (TranslationServiceClient client = TranslationServiceClient.create()) {
+                        LocationName parent = LocationName.of(PROJECT_ID, "global");
+
+                        TranslateTextRequest request = TranslateTextRequest.newBuilder()
+                                .setParent(parent.toString())
+                                .setMimeType("text/plain")
+                                .setTargetLanguageCode(localizedMessage.getLang())
+                                .setSourceLanguageCode("en")
+                                .addContents(sourceText)
+                                .build();
+
+                        TranslateTextResponse response = client.translateText(request);
+
+                        List<Translation> results = response.getTranslationsList();
+                        localizedMessage.setText(results.get(0).getTranslatedText());
+                    }
+                }
+            }
+        }
     }
 }

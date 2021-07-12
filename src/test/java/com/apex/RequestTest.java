@@ -36,13 +36,5 @@ class RequestTest {
         String json = new Gson().toJson(response);
 
         assertThat(json).startsWith("{");
-
-        /*
-        withEnvironmentVariable("jdbc_url", "jdbc:sqlite:src/main/resources/eco-data.db")
-                .and("db_pwd", "TJcdV4UA%1uz").execute(() -> {
-
-            assertThat(System.getenv("jdbc_url")).isNotBlank();
-        });
-        */
     }
 }
