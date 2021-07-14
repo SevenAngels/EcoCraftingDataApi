@@ -9,6 +9,7 @@ public class Output implements Comparable<Output> {
     private Item item;
     private int quantity;
     private boolean reducible;
+    private boolean primary;
 
 
     @Override
