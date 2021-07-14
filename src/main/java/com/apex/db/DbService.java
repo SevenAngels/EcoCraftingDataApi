@@ -25,7 +25,7 @@ public class DbService {
     private static final String SELECT_ITEMS_SQL = "SELECT Name, ItemNameID, Tag FROM ITEMS";
     private static final String SELECT_INGREDIENTS_SQL = "SELECT Quantity, Reducible, I.Name, I.Tag, I.ItemNameID " +
             "FROM Ingredients JOIN Items I on I.ItemNameID = Ingredients.ItemNameID";
-    private static final String SELECT_OUTPUTS_SQL = "SELECT Quantity, Reducible, Primary, I.Name, I.Tag, I.ItemNameID " +
+    private static final String SELECT_OUTPUTS_SQL = "SELECT Quantity, Reducible, IsPrimary, I.Name, I.Tag, I.ItemNameID " +
             "FROM Outputs JOIN Items I on I.ItemNameID = Outputs.ItemNameID";
     private static final String SELECT_RECIPES_SQL = "SELECT RecipeName, RecipeNameID, Level, Labor, S.SkillNameID, " +
             "SkillName, BasicUpgrade, AdvancedUpgrade, ModernUpgrade, " +
@@ -34,7 +34,7 @@ public class DbService {
             "JOIN Skills S on Recipes.SkillNameID = S.SkillNameID";
     private static final String SELECT_INGREDIENTS_BY_RECIPE_SQL = "SELECT Quantity, Reducible, I.Name, I.Tag, I.ItemNameID " +
             "FROM Ingredients JOIN Items I on I.ItemNameID = Ingredients.ItemNameID WHERE RecipeNameID = ?";
-    private static final String SELECT_OUTPUTS_BY_RECIPE_SQL = "SELECT Quantity, Reducible, Primary, I.Name, I.Tag, I.ItemNameID " +
+    private static final String SELECT_OUTPUTS_BY_RECIPE_SQL = "SELECT Quantity, Reducible, IsPrimary, I.Name, I.Tag, I.ItemNameID " +
             "FROM Outputs JOIN Items I on I.ItemNameID = Outputs.ItemNameID WHERE RecipeNameID = ?";
 
     private static final Connection connection = getConnection();
@@ -169,7 +169,7 @@ public class DbService {
                                 .build())
                         .quantity(rs.getInt("Quantity"))
                         .reducible(rs.getBoolean("Reducible"))
-                        .primary(rs.getBoolean("Primary"))
+                        .primary(rs.getBoolean("IsPrimary"))
                         .build();
                 outputs.add(output);
             }
@@ -220,7 +220,7 @@ public class DbService {
                                 .build())
                         .quantity(rs.getInt("Quantity"))
                         .reducible(rs.getBoolean("Reducible"))
-                        .primary(rs.getBoolean("Primary"))
+                        .primary(rs.getBoolean("IsPrimary"))
                         .build();
                 outputs.add(output);
             }
