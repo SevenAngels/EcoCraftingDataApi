@@ -33,11 +33,20 @@ public class Main {
 
 
     public static void main(String[] args) throws SQLException, IOException, InterruptedException {
-        List<Message> messages = readMessagesToTranslate();
-        translateMessages(messages);
-        String json = new Gson().toJson(messages);
-        FileUtils.writeStringToFile(new File("src/main/resources/messages.json"), json, UTF_8);
-        LOGGER.info(json);
+        createNewTranslations();
+    }
+
+    /**
+     * Use this method when relevant changes are made to the database.
+     *
+     * @throws SQLException
+     * @throws IOException
+     */
+    public static void createNewTranslations() throws SQLException, IOException {
+        createEnglishFilesForTranslation();
+        createEnglishReferenceFiles();
+        translateAllSupportedLanguages();
+        doTranslationsToFile();
     }
 
     private static void createEnglishFilesForTranslation() throws SQLException, IOException {
