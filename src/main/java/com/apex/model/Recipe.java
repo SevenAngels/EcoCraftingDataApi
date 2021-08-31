@@ -16,6 +16,7 @@ public class Recipe implements Comparable<Recipe> {
     private CraftingTable craftingTable;
     private List<Ingredient> ingredients;
     private List<Output> outputs;
+    private boolean hidden;
 
     @Override
     public boolean equals(Object o) {

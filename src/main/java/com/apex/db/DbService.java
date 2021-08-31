@@ -29,7 +29,7 @@ public class DbService {
             "FROM Outputs JOIN Items I on I.ItemNameID = Outputs.ItemNameID";
     private static final String SELECT_RECIPES_SQL = "SELECT RecipeName, RecipeNameID, Level, Labor, S.SkillNameID, " +
             "SkillName, BasicUpgrade, AdvancedUpgrade, ModernUpgrade, " +
-            "LavishWorkspace, CT.Name, NameID, UpgradeModule " +
+            "LavishWorkspace, CT.Name, NameID, UpgradeModule, Hidden " +
             "FROM Recipes JOIN CraftingTables CT on CT.NameID = Recipes.CraftingTableNameID " +
             "JOIN Skills S on Recipes.SkillNameID = S.SkillNameID";
     private static final String SELECT_INGREDIENTS_BY_RECIPE_SQL = "SELECT Quantity, Reducible, I.Name, I.Tag, I.ItemNameID " +
@@ -119,6 +119,7 @@ public class DbService {
                                 .build())
                         .ingredients(getIngredientsForRecipe(recipeNameID))
                         .outputs(getOutputsForRecipe(recipeNameID))
+                        .hidden(rs.getBoolean("Hidden"))
                         .build();
                 recipes.add(recipe);
             }
