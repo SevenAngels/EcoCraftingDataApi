@@ -9,6 +9,7 @@ public class CraftingTable implements Comparable<CraftingTable> {
     private String name;
     private String nameID;
     private String upgradeModuleType;
+    private boolean hidden;
 
 
     @Override

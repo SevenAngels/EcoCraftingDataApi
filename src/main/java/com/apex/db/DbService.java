@@ -20,7 +20,7 @@ public class DbService {
     private static final String SELECT_LABOR_COSTS_SQL = "SELECT Level, Modifier FROM LaborCost";
     private static final String SELECT_SKILLS_SQL = "SELECT SkillName, SkillNameID, BasicUpgrade, AdvancedUpgrade, " +
             "ModernUpgrade, LavishWorkspace FROM Skills";
-    private static final String SELECT_TABLES_SQL = "SELECT Name, NameID, UpgradeModule FROM CraftingTables";
+    private static final String SELECT_TABLES_SQL = "SELECT Name, NameID, UpgradeModule, Hidden FROM CraftingTables";
     private static final String SELECT_UPGRADES_SQL = "SELECT Name, NameID, TypeNameID, Modifier FROM UpgradeModules";
     private static final String SELECT_ITEMS_SQL = "SELECT Name, ItemNameID, Tag FROM ITEMS";
     private static final String SELECT_INGREDIENTS_SQL = "SELECT Quantity, Reducible, I.Name, I.Tag, I.ItemNameID " +
@@ -29,7 +29,7 @@ public class DbService {
             "FROM Outputs JOIN Items I on I.ItemNameID = Outputs.ItemNameID";
     private static final String SELECT_RECIPES_SQL = "SELECT RecipeName, RecipeNameID, Level, Labor, S.SkillNameID, " +
             "SkillName, BasicUpgrade, AdvancedUpgrade, ModernUpgrade, " +
-            "LavishWorkspace, CT.Name, NameID, UpgradeModule, Hidden " +
+            "LavishWorkspace, CT.Name, NameID, UpgradeModule, Recipes.Hidden, CT.Hidden AS HiddenTable " +
             "FROM Recipes JOIN CraftingTables CT on CT.NameID = Recipes.CraftingTableNameID " +
             "JOIN Skills S on Recipes.SkillNameID = S.SkillNameID";
     private static final String SELECT_INGREDIENTS_BY_RECIPE_SQL = "SELECT Quantity, Reducible, I.Name, I.Tag, I.ItemNameID " +
@@ -57,6 +57,7 @@ public class DbService {
                         .name(rs.getString("Name"))
                         .nameID(rs.getString("NameID"))
                         .upgradeModuleType(rs.getString("UpgradeModule"))
+                        .hidden(rs.getBoolean("Hidden"))
                         .build();
                 tables.add(upgrade);
             }
@@ -116,6 +117,7 @@ public class DbService {
                                 .name(rs.getString("Name"))
                                 .nameID(rs.getString("NameID"))
                                 .upgradeModuleType(rs.getString("UpgradeModule"))
+                                .hidden(rs.getBoolean("HiddenTable"))
                                 .build())
                         .ingredients(getIngredientsForRecipe(recipeNameID))
                         .outputs(getOutputsForRecipe(recipeNameID))
