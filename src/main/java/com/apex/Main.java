@@ -1,8 +1,10 @@
 package com.apex;
 
 import com.apex.model.*;
+import com.apex.model.adapters.RecipeAdapter;
 import com.google.cloud.translate.v3beta1.*;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.FalseFileFilter;
@@ -33,7 +35,24 @@ public class Main {
 
 
     public static void main(String[] args) throws SQLException, IOException, InterruptedException {
-        createNewTranslations();
+        printRecipeJson();
+    }
+
+    /**
+     * Prints the recipe json to put into recipes.ts data file
+     *
+     * @throws SQLException
+     */
+    public static void printRecipeJson() throws SQLException {
+        List<Recipe> recipes = getAllRecipes();
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .disableHtmlEscaping()
+                .registerTypeAdapter(Recipe.class, new RecipeAdapter())
+                .create();
+        String recipeJson = gson.toJson(recipes);
+        String newJson = recipeJson.replaceAll("\"(get[A-z]+ByNameID\\('[A-z]+'\\))\"", "$1");
+        System.out.println(newJson);
     }
 
     /**

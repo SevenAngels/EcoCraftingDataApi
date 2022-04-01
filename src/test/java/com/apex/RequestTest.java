@@ -1,8 +1,13 @@
 package com.apex;
 
 import com.apex.model.EcoDataResponse;
+import com.apex.model.Recipe;
+import com.apex.model.adapters.RecipeAdapter;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.Test;
+
+import java.util.regex.Pattern;
 
 import static com.apex.db.DbService.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,5 +41,14 @@ class RequestTest {
         String json = new Gson().toJson(response);
 
         assertThat(json).startsWith("{");
+
+        //Check default Gson object serialization to ensure no function pattern
+        Pattern functionPattern = Pattern.compile(".*get[A-z]+ByNameID.*");
+        assertThat(json).doesNotMatch(functionPattern);
+
+        //Check custom recipe adapter Gson serialization to ensure function pattern is present
+        Gson gson = new GsonBuilder().registerTypeAdapter(Recipe.class, new RecipeAdapter()).create();
+        String customJson = gson.toJson(response);
+        assertThat(customJson).matches(functionPattern);
     }
 }
